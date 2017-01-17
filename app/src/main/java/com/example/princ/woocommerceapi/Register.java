@@ -3,15 +3,20 @@ package com.example.princ.woocommerceapi;
 /**
  * Created by princ on 16-01-2017.
  */
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.JSONStringer;
 
 import java.io.BufferedReader;
@@ -19,11 +24,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -31,12 +38,12 @@ public class Register extends AppCompatActivity {
 
     EditText etname, etPhone, etpassword, etAddress, etEmail;
     Button bRegister;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_layout);
-
         etname = (EditText) findViewById(R.id.etName);
         etPhone = (EditText) findViewById(R.id.etphone);
         etEmail = (EditText) findViewById(R.id.etemail);
@@ -46,19 +53,83 @@ public class Register extends AppCompatActivity {
     }
 
 
-    String body = new String("{\"customer\": {\r\n\"email\": \"5john.doe@example.com\",\r\n  \"first_name\": \"John\",\r\n  \"last_name\": \"Doe\",\r\n  \"username\": \"5john.doe\",\r\n  \"password\":\"123456\",\r\n  \"billing_address\": {\r\n    \"first_name\": \"John\",\r\n    \"last_name\": \"Doe\",\r\n    \"company\": \"\",\r\n    \"address_1\": \"969 Market\",\r\n    \"address_2\": \"\",\r\n    \"city\": \"San Francisco\",\r\n    \"state\": \"CA\",\r\n    \"postcode\": \"94103\",\r\n    \"country\": \"US\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"(555) 555-5555\"\r\n  },\r\n  \"shipping_address\": {\r\n    \"first_name\": \"John\",\r\n    \"last_name\": \"Doe\",\r\n    \"company\": \"\",\r\n    \"address_1\": \"969 Market\",\r\n    \"address_2\": \"\",\r\n    \"city\": \"San Francisco\",\r\n    \"state\": \"CA\",\r\n    \"postcode\": \"94103\",\r\n    \"country\": \"US\"\r\n  }\r\n}}");
+
+    //String body = new String("{\"customer\": {\r\n\"email\": \"5john.doe@example.com\",\r\n  \"first_name\": \"John\",\r\n  \"last_name\": \"Doe\",\r\n  \"username\": \"5john.doe\",\r\n  \"password\":\"123456\",\r\n  \"billing_address\": {\r\n    \"first_name\": \"John\",\r\n    \"last_name\": \"Doe\",\r\n    \"company\": \"\",\r\n    \"address_1\": \"969 Market\",\r\n    \"address_2\": \"\",\r\n    \"city\": \"San Francisco\",\r\n    \"state\": \"CA\",\r\n    \"postcode\": \"94103\",\r\n    \"country\": \"US\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"(555) 555-5555\"\r\n  },\r\n  \"shipping_address\": {\r\n    \"first_name\": \"John\",\r\n    \"last_name\": \"Doe\",\r\n    \"company\": \"\",\r\n    \"address_1\": \"969 Market\",\r\n    \"address_2\": \"\",\r\n    \"city\": \"San Francisco\",\r\n    \"state\": \"CA\",\r\n    \"postcode\": \"94103\",\r\n    \"country\": \"US\"\r\n  }\r\n}}");
 
 
 
 
+    String body;
 
     public void RegisterD(View view) {
 
-        new StoreUserDataAsyncTask().execute();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setTitle("Processing");
+        progressDialog.setMessage("please wait...");
+
+        String UserPhone  =  etPhone.getText().toString();
+        String UserEmail = etEmail.getText().toString();
+        String UserName = etname.getText().toString();
+        String UserAddress = etAddress.getText().toString();
+        String UserPassword = etpassword.getText().toString();
+
+        Boolean AllfieldsCorrectlyFilled = checkTheFields(UserName,UserAddress,UserEmail,UserPhone,UserPassword);
+
+        if (AllfieldsCorrectlyFilled){
+
+         body = new String("{\"customer\": {\n" +
+                "\"email\": \""+UserEmail+"\",\n" +
+                "  \"first_name\": \""+ UserName +"\",\n" +
+                "  \"last_name\": \"\",\n" +
+                "  \"username\": \""+ UserPhone +"\",\n" +
+                "  \"password\":\""+ UserPassword +"\",\n" +
+                "  \"billing_address\": {\n" +
+                "    \"first_name\": \""+ UserName +"\",\n" +
+                "    \"last_name\": \"\",\n" +
+                "    \"company\": \"\",\n" +
+                "    \"address_1\": \""+ UserAddress +"\",\n" +
+                "    \"address_2\": \"\",\n" +
+                "    \"city\": \"Mumbai\",\n" +
+                "    \"state\": \"IN\",\n" +
+                "    \"postcode\": \"12345\",\n" +
+                "    \"country\": \"IN\",\n" +
+                "    \"email\": \""+ UserEmail +"\",\n" +
+                "    \"phone\": \" "+ UserPhone +"\"\n" +
+                "  },\n" +
+                "  \"shipping_address\": {\n" +
+                "    \"first_name\": \"" + UserName + "\",\n" +
+                "    \"last_name\": \"\",\n" +
+                "    \"company\": \"\",\n" +
+                "    \"address_1\": \""+ UserAddress +"\",\n" +
+                "    \"address_2\": \"\",\n" +
+                "    \"city\": \"Mumbai\",\n" +
+                "    \"state\": \"IN\",\n" +
+                "    \"postcode\": \"12345\",\n" +
+                "    \"country\": \"IN\"\n" +
+                "  }\n" +
+                "}}");
+
+        new StoreUserDataAsyncTask().execute();}
+
+        else {
+            Toast.makeText(this, "Please Fill all The Fields Correctly", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private Boolean checkTheFields(String userName, String userAddress, String userEmail, String userPhone, String userPassword) {
+
+        //return true if all the fields are not null
+        return userName.length()>=0 && userAddress.length()>=0 && userEmail.length()>=0 && userPassword.length()>=0 && userPhone.length()>=0;
+
     }
 
     public class StoreUserDataAsyncTask extends AsyncTask<Void, Void, Void> {
 
+        int responseCode;
+        JSONArray jsonErrorArray;
+        String errorMessage;
+        String errorCodeString;
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -70,7 +141,6 @@ public class Register extends AppCompatActivity {
             dataToSend.put("password", user.password); */
 
             BufferedReader reader = null;
-
 
 
             try {
@@ -85,7 +155,8 @@ public class Register extends AppCompatActivity {
                 //Sending the data to the server - This much is enough to send data to server
                 //But to read the response of the server, you will have to implement the procedure below
                 writer.flush();
-                int responseCode  = conn.getResponseCode();
+                Log.i("custom_check", body);
+                responseCode  = conn.getResponseCode();
 
 
                 if (responseCode >= 200 && responseCode < 400) {
@@ -109,19 +180,30 @@ public class Register extends AppCompatActivity {
                 else {
                    //InputStream is = conn.getErrorStream();
                     StringBuilder sb = new StringBuilder();
-                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    reader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
 
                     String line;
                     while ((line = reader.readLine()) != null) {
                         //Read till there is something available
                         sb.append(line + "\n");     //Reading and saving line by line - not all at once
                     }
-                    line = sb.toString();           //Saving complete data received in string, you can do it differently
+                    line = sb.toString();
+                    //Saving complete data received in string, you can do it differently
+                    JSONObject jsonObject = new JSONObject(line);
+                    jsonErrorArray = jsonObject.getJSONArray("errors");
+                    JSONObject jsonErrorObject = jsonErrorArray.getJSONObject(0);
+                    errorMessage = jsonErrorObject.getString("message");
+                    errorCodeString = jsonErrorObject.getString("code");
 
                     //Just check to the values received in Logcat
+                    //Toast.makeText(Register.this, "there is some error", Toast.LENGTH_SHORT).show();
+
+
+
                     Log.i("custom_check", "The values received in the store part are as follows:");
                     Log.i("custom_check", line);
-                    Log.i("custom_check", Integer.toString(responseCode));
+                    Log.i("custom_check", errorMessage);
+                    Log.i("Response_Code", Integer.toString(responseCode));
 
                 }
 
@@ -148,7 +230,20 @@ public class Register extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            //progressDialog.dismiss();
+            progressDialog.dismiss();
+            if (responseCode >= 200 && responseCode < 400) {
+                //do nothing
+            }
+            else {
+                if (Objects.equals(errorCodeString, "registration-error-username-exists")){
+                    Toast.makeText(Register.this, "An account is already registered with that Phone Number. Please choose another" , Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(Register.this, errorMessage , Toast.LENGTH_LONG).show();
+
+                }
+                //InputStream is = conn.getErrorStream();
+
+            }
             //userCallback.done(null);
             super.onPostExecute(aVoid);
         }

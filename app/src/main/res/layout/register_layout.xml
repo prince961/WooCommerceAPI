@@ -14,7 +14,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout">
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
+            android:inputType="text"
             android:textSize="18sp" />
 
         <TextView
@@ -87,6 +89,8 @@
 
         <EditText
             android:id="@+id/etAddress"
+            android:inputType="textPostalAddress"
+            android:ems="10"
             android:layout_width="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
