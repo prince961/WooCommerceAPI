@@ -1,5 +1,7 @@
 package com.example.princ.woocommerceapi;
 
+import java.net.URL;
+
 /**
  * Created by princ on 16-01-2017.
  * user = customer
@@ -7,7 +9,7 @@ package com.example.princ.woocommerceapi;
 
 public class User {
     String name, username, password;
-    int age;
+    int age,id;
 
     public User(String name,int age, String username , String password  ){
         this.name = name;
@@ -18,6 +20,11 @@ public class User {
 
     public User(String username, String password) {
         this("", -1, username, password);
+
+    }
+
+    public User (URL url){
+
     }
 
     public String getName() {

@@ -149,6 +149,8 @@ public class Register extends AppCompatActivity {
                 conn.setConnectTimeout(15000);
                 conn.setRequestMethod("POST");
                 conn.setDoOutput(true);
+                conn.setRequestProperty("Content-Type", "application/json");
+
                 //int responseCode  = conn.getResponseCode();
                 OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
                 writer.write(body);
