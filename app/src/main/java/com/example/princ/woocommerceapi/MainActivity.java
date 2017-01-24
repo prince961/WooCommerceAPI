@@ -55,8 +55,10 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                  //      .setAction("Action", null).show();
+                fragmentManager.beginTransaction().replace(R.id.content_Frame, new CartFragment()).addToBackStack(null).commit();
+
             }
         });
 
@@ -99,7 +101,8 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             } finally {
                 try {
-                    iStream.close();
+                    if (iStream != null){
+                    iStream.close();}
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity
             //ModelProducts modelProducts = AllProducts.get(0);
             //modelProducts.getCategories()
             controller.addAllProducts(AllProducts);
-            Log.i("Array_Size",Integer.toString(AllProducts.size()));
+            //Log.i("Array_Size",Integer.toString(AllProducts.size()));
 
         }
     }
@@ -184,17 +187,17 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_menu) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_cart) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.contact_us) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_call) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_User) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_Logout) {
 
         }
 
