@@ -4,6 +4,7 @@ import android.app.Application;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by mohit on 10/5/2016.
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class Controller extends Application {
 
-    private ArrayList<ModelProducts> myProducts = new ArrayList<ModelProducts>();
+    private ArrayList<ModelProducts> AllProducts = new ArrayList<ModelProducts>();
     private ArrayList<ModelProducts> noodleProducts = new ArrayList<ModelProducts>();
     private ArrayList<ModelProducts> AppetizerProductAl = new ArrayList<ModelProducts>();
     private ArrayList<ModelProducts> Breads = new ArrayList<ModelProducts>();
@@ -39,7 +40,7 @@ public class Controller extends Application {
 
     public void setProducts(ModelProducts Products) {
 
-        myProducts.add(Products);
+        AllProducts.add(Products);
 
     }
 
@@ -51,7 +52,7 @@ public class Controller extends Application {
 
     public int getProductsArraylistSize() {
 
-        return myProducts.size();
+        return AllProducts.size();
     }
 
     public boolean checkid(int id) {
@@ -67,7 +68,22 @@ public class Controller extends Application {
         return isTrue;
     }
 
-    public ArrayList<ModelProducts> getNoodleProducts() {
+    public ArrayList<ModelProducts> getCategoryProducts(String category) {
+        for (int j = 0; j < AllProducts.size(); j++) {
+            String[] categories = AllProducts.get(j).getCategories();
+            int categoryStringSize = categories.length;
+
+            for (int k = 0 ; k< categoryStringSize ; k++ ){
+                String StringCAtegory = categories[k];
+                if (Objects.equals(StringCAtegory, category)){
+                    noodleProducts.add(AllProducts.get(j));
+
+                }
+
+            }
+
+        }
+
         return noodleProducts;
     }
 
@@ -145,5 +161,9 @@ public class Controller extends Application {
         }
 
         return isTrue;
+    }
+
+    public void addAllProducts(ArrayList<ModelProducts> allProducts) {
+        AllProducts.addAll(allProducts);
     }
 }

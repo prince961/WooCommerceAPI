@@ -17,6 +17,7 @@ import android.widget.ImageView;
  */
 
 public class CategoriesFragmenent2 extends Fragment {
+
     View myView;
     @Nullable
     @Override
@@ -35,7 +36,7 @@ public class CategoriesFragmenent2 extends Fragment {
             public void onClick(View v)
             {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, new NoodleFragment()).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_Frame, new NoodleFragment()).addToBackStack(null).commit();
 
             }
         });
@@ -48,7 +49,7 @@ public class CategoriesFragmenent2 extends Fragment {
             public void onClick(View v)
             {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, new StarterFragment()).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_Frame, new StarterFragment()).addToBackStack(null).commit();
 
             }
         });
@@ -61,7 +62,7 @@ public class CategoriesFragmenent2 extends Fragment {
             public void onClick(View v)
             {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, new NonVegMainCourseFragment()).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_Frame, new NonVegMainCourseFragment()).addToBackStack(null).commit();
 
             }
         });
@@ -73,7 +74,7 @@ public class CategoriesFragmenent2 extends Fragment {
             public void onClick(View v)
             {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, new VegMainCourseFragment()).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_Frame, new VegMainCourseFragment()).addToBackStack(null).commit();
 
             }
         });
@@ -86,7 +87,7 @@ public class CategoriesFragmenent2 extends Fragment {
             public void onClick(View v)
             {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_main, new BreadsFragment()).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_Frame, new BreadsFragment()).addToBackStack(null).commit();
 
             }
         });

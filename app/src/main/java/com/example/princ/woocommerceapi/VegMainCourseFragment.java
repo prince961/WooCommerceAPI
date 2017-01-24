@@ -39,32 +39,7 @@ public class VegMainCourseFragment extends Fragment {
         boolean productInCart = controller.checkVegMainCourseId(301);
         if (productInCart==false) {
 
-            ArrayList<ModelProducts> noodleProducts = new ArrayList<>();
-            ModelProducts Veg65 = new ModelProducts("Veg 65", " ", 180, 0,301);
-            ModelProducts PaneerMbc = new ModelProducts("Paneer Mushroom Babycorn Crispy", "Veg Noodle with a twist of Schezwan", 120, 0,302);
-            ModelProducts vegTripleNoodle = new ModelProducts("Mushroom Garlic Chilli", "Veg. Triple Noodle", 130, 0,303);
-            ModelProducts vegMunchurianNoodle = new ModelProducts("Mushroom Soyabean", "Veg Munchurian Noodle", 180, 0,304);
-            ModelProducts PaneerNoodle = new ModelProducts("Veg Munchurian", "Enjoy your Noodle with Paneer", 120, 0,305);
-            ModelProducts EggNoodle = new ModelProducts("Paneer Tikka", "Noodle With eggs", 180, 0,306);
-            ModelProducts chickenHakkaNoodle = new ModelProducts("Paneer Butterr Masala", "Delicious hakka noodle with chicken", 190, 0, 307);
-            ModelProducts chickenSchezwanNoodle = new ModelProducts("Paneer Angare", "Chicken Noodle with schezwan sauce", 150, 0,308);
-            ModelProducts chickenTripleNoodle = new ModelProducts("Paneer Kadai", "Chicken Triple Noodle", 110, 0,309);
-            ModelProducts chickenManchurianNoodle = new ModelProducts("Shahi Paneer", "Chicken noodle with munchurian gravy", 140, 0,310);
-            noodleProducts.add(0, Veg65);
-            noodleProducts.add(1, PaneerMbc);
-            noodleProducts.add(2, vegTripleNoodle);
-            noodleProducts.add(3, vegMunchurianNoodle);
-            noodleProducts.add(4, PaneerNoodle);
-            noodleProducts.add(5, EggNoodle);
-            noodleProducts.add(6, chickenHakkaNoodle);
-            noodleProducts.add(7, chickenManchurianNoodle);
-            noodleProducts.add(8, chickenSchezwanNoodle);
-            noodleProducts.add(9, chickenTripleNoodle);
 
-            controller.setVegMainCourse(noodleProducts);
-
-            ListAdapterImagLess listAdapterImagLess = new ListAdapterImagLess(getActivity().getBaseContext(), R.layout.list_item_imageless, noodleProducts, controller);
-            listView.setAdapter(listAdapterImagLess);
 
             return myView;
         }else {

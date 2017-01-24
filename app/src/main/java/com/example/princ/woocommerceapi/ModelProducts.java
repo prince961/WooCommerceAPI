@@ -3,6 +3,8 @@ package com.example.princ.woocommerceapi;
 import android.graphics.drawable.Drawable;
 import android.R.*;
 
+import java.util.ArrayList;
+
 public class ModelProducts {
 
     private String productName;
@@ -13,16 +15,18 @@ public class ModelProducts {
     private int position;
     private int image;
     private int id;
+    private String[] categories ;
 
-    public ModelProducts(String productName, String productDesc, int productPrice, int productQuantity,int id)
+    public ModelProducts(String productName, String productDesc, int productPrice, int productQuantity, int id, String[] categories, String imageLink )
     {
         this.productName  = productName;
         this.productQuantity = productQuantity;
         this.productDesc  = productDesc;
         this.productPrice = productPrice;
-        //this.imageLink    = imageLink;
+        this.imageLink    = imageLink;
         this.image = R.drawable.logo;
         this.id = id;
+        this.categories = categories;
 
     }
 
@@ -78,5 +82,9 @@ public class ModelProducts {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String[] getCategories() {
+        return categories;
     }
 }

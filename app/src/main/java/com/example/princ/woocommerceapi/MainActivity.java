@@ -2,9 +2,11 @@ package com.example.princ.woocommerceapi;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,8 +18,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Controller controller = null;
 
     UserLocalStore userLocalStore;
     FragmentManager fragmentManager = getFragmentManager();
@@ -28,7 +43,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        fragmentManager.beginTransaction().replace(R.id.content_main, new CategoriesFragmenent2()).commit();
+        fragmentManager.beginTransaction().replace(R.id.content_Frame, new CategoriesFragmenent2()).commit();
+
+        controller = (Controller) getApplicationContext();
+
+        DownloadProducts downloadProducts = new DownloadProducts();
+        downloadProducts.execute();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -51,6 +71,63 @@ public class MainActivity extends AppCompatActivity
 
         userLocalStore = new UserLocalStore(this);
     }
+
+    private class DownloadProducts extends AsyncTask<String, Void,String>{
+        String data = null;
+        InputStream iStream = null;
+        @Override
+        protected String doInBackground(String... url1) {
+            //we dont do anything with the url1
+            try {
+                URL url = new URL("https://www.jersershor.com/wc-api/v3/products?consumer_key=ck_638caaf46271a320075ecee01e89581f91644b98&consumer_secret=cs_0f5fe1845a21396a459fc3961a8255d15a62970b");
+                //URL url = new URL(strUrl);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+                iStream = urlConnection.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+                StringBuffer sb = new StringBuffer();
+
+                String line = "";
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                data = sb.toString();
+                //Log.i("String_InputString", data);
+                br.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    iStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            JSONObject jObject = null;
+            try {
+                jObject = new JSONObject(s);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            JsonParserProducts jsonParserProducts = new JsonParserProducts();
+            ArrayList<ModelProducts> AllProducts = jsonParserProducts.parse(jObject);
+            //ModelProducts modelProducts = AllProducts.get(0);
+            //modelProducts.getCategories()
+            controller.addAllProducts(AllProducts);
+            Log.i("Array_Size",Integer.toString(AllProducts.size()));
+
+        }
+    }
+
+
 
     @Override
     public void onBackPressed() {
