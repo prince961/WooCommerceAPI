@@ -2,15 +2,18 @@ package com.example.princ.woocommerceapi;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 /**
  * Created by princ on 24-11-2016.
@@ -19,14 +22,19 @@ import android.widget.ImageView;
 public class CategoriesFragmenent2 extends Fragment {
 
     View myView;
+    ProgressDialog progressDialog;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myView = inflater.inflate(R.layout.categories_fragment_layout,container,false);
         //FragmentManager fragmentManager = getFragmentManager();
+        Controller controller = (Controller) getActivity().getApplicationContext();
+        Boolean allProductsAdded = controller.isAllProductsAdded();
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
+
+        //FragmentManager fragmentManager = getFragmentManager();
 
         ImageView noodleImage = (ImageView) myView.findViewById(R.id.noodleImage);
         //Button button = new Button()
@@ -35,8 +43,31 @@ public class CategoriesFragmenent2 extends Fragment {
             @Override
             public void onClick(View v)
             {
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_Frame, new NoodleFragment()).addToBackStack(null).commit();
+                Controller acontroller = (Controller) getActivity().getApplicationContext();
+                Boolean allProductsAdded = acontroller.isAllProductsAdded();
+                Log.i("Download_completed",Boolean.toString(allProductsAdded));
+                if (allProductsAdded) {
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_Frame, new NoodleFragment()).addToBackStack(null).commit();
+                }
+                else {
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (allProductsAdded) {
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_Frame, new NoodleFragment()).addToBackStack(null).commit();
+                    }
+                    else {
+                        Toast.makeText(getActivity().getApplication(), "Please check your internet Connectivity", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+                }
 
             }
         });

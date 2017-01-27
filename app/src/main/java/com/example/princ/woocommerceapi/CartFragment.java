@@ -9,15 +9,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-/**
- * Created by princ on 09-12-2016.
- */
 
+/**
+ * Created by princ on 27-01-2017.
+ */
 public class CartFragment extends Fragment {
 
     Controller controller ;
@@ -34,13 +36,27 @@ public class CartFragment extends Fragment {
         controller = (Controller) getActivity().getApplicationContext();
         cListView  = (ListView) myView.findViewById(R.id.cartLv);
         totalPrice = (TextView) myView.findViewById(R.id.totalAmount);
+        Button proceedFromCart = (Button) myView.findViewById((R.id.button5));
         ArrayList<ModelProducts> cartProductList = controller.getCart().getCartProducts();
         final CartListAdapter cartListAdapter = new CartListAdapter(getActivity().getBaseContext(),R.layout.cart_item,cartProductList,controller,totalPrice);
         cListView.setAdapter(cartListAdapter);
         inflateTotalAmount(cartProductList);
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
+        proceedFromCart.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (controller.getCart().getCartSize()> 0){
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_Frame, new AddressToOrder()).addToBackStack(null).commit();
+                }else {
+                    Toast.makeText(getActivity().getBaseContext(), "Cart Is Empty", Toast.LENGTH_SHORT).show();
+                }
 
+            }
+        });
 
 
         return myView;
@@ -67,10 +83,6 @@ public class CartFragment extends Fragment {
         totalPrice.setText(Double.toString(totalAmount)+" Rs.");
     }
 
-    public void proceedFromCart(View view) {
-        Intent intent = new Intent(getActivity().getBaseContext(), AfterCart.class);
-        startActivity(intent);
-    }
 
 
 }

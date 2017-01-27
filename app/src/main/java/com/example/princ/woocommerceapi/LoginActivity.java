@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         JSONArray jsonErrorArray;
         String errorMessage;
         String errorCodeString;
+        String userEmail;
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -108,9 +109,13 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     line = sb.toString();           //Saving complete data received in string, you can do it differently
 
+                    JSONObject jsonObject =new JSONObject(line);
+                    userEmail = jsonObject.getString("user_email");
+                    userLocalStore.storeUserEmail(userEmail);
+
                     //Just check to the values received in Logcat
                     Log.i("custom_check", "The values received in the store part are as follows:");
-                    Log.i("custom_check", line);
+                    Log.i("user_email", userEmail);
                     Log.i("response_code", Integer.toString(responseCode));
 
 

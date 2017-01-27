@@ -19,17 +19,41 @@ public class UserLocalStore {
 
     }
 
-    public void storeUserData(User user){
+    public void storeUserData(String name,String number,String address,int id){
 
         SharedPreferences.Editor spEditor = userLocalDatabase.edit();
-        spEditor.putString("name",user.name);
-        spEditor.putString("username",user.username);
-        spEditor.putString("password",user.password);
-        spEditor.putInt("name",user.age);
+        spEditor.putString("name",name);
+        spEditor.putString("phone",number);
+        spEditor.putString("address",address);
+        spEditor.putInt("id",id);
         spEditor.apply();
         //spEditor.commit();
 
+        Log.i("UserAddress", address);
+
     }
+
+    public void storeUserEmail(String email){
+
+        SharedPreferences.Editor spEditor = userLocalDatabase.edit();
+        spEditor.putString("eMail",email);
+        spEditor.apply();
+        //spEditor.commit();
+    }
+
+    public String getUserName(){
+        String userName = userLocalDatabase.getString("name","");
+        return userName;
+    }
+    public String getUserNumber(){
+        String userNumber = userLocalDatabase.getString("phone","");
+        return userNumber;
+    }
+    public String getUserAddress(){
+        String userNumber = userLocalDatabase.getString("address","");
+        return userNumber;
+    }
+
 
     public User GetLoggedinUser() {
         if (userLocalDatabase.getBoolean("loggedIn", false) == false) {
@@ -43,6 +67,10 @@ public class UserLocalStore {
 
         User user = new User(name, age, username, password);
         return user;
+    }
+
+    public String getUserEmail(){
+        return userLocalDatabase.getString("eMail","");
     }
 
 
@@ -69,6 +97,7 @@ public class UserLocalStore {
     }
 
 
-
-
+    public int getUserId() {
+        return userLocalDatabase.getInt("id",0);
+    }
 }

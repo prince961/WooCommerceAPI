@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Controller controller = null;
+    private boolean allProductsAdded ;
 
     UserLocalStore userLocalStore;
     FragmentManager fragmentManager = getFragmentManager();
@@ -47,8 +49,9 @@ public class MainActivity extends AppCompatActivity
 
         controller = (Controller) getApplicationContext();
 
+        if (!controller.isAllProductsAdded()){
         DownloadProducts downloadProducts = new DownloadProducts();
-        downloadProducts.execute();
+        downloadProducts.execute();}
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -125,7 +128,62 @@ public class MainActivity extends AppCompatActivity
             //ModelProducts modelProducts = AllProducts.get(0);
             //modelProducts.getCategories()
             controller.addAllProducts(AllProducts);
-            //Log.i("Array_Size",Integer.toString(AllProducts.size()));
+            controller.setAllProductsAdded(true);
+            Log.i("main_act_allproducts",Boolean.toString(controller.isAllProductsAdded()));
+            DownloadUserDetails downloadUserDetails = new DownloadUserDetails();
+            downloadUserDetails.execute();
+
+        }
+    }
+
+    private class DownloadUserDetails extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            InputStream inputStream2 = null;
+            String data2 = null;
+            String userEmail = userLocalStore.getUserEmail();
+            String userUrl = "https://www.jersershor.com/wc-api/v3/customers/email/"+userEmail+"?consumer_key=ck_638caaf46271a320075ecee01e89581f91644b98&consumer_secret=cs_0f5fe1845a21396a459fc3961a8255d15a62970b";
+            try {
+                URL url = new URL(userUrl);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+                inputStream2 = urlConnection.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream2));
+                StringBuffer sb2 = new StringBuffer();
+
+                String line = "";
+                while ((line = br.readLine()) != null) {
+                    sb2.append(line);
+                }
+                data2 = sb2.toString();
+                br.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if ( inputStream2 != null){
+                        inputStream2.close();}
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                JSONObject jsonObject = new JSONObject(data2);
+                JSONObject jsonObjectUser = jsonObject.getJSONObject("customer");
+                String UserName = jsonObjectUser.getString("first_name");
+                int UserId = jsonObjectUser.getInt("id");
+                JSONObject shippingAddressJobject = jsonObjectUser.getJSONObject("billing_address");
+                String UserPhone = shippingAddressJobject.getString("phone");
+                String UserAddress = shippingAddressJobject.getString("address_1");
+
+                userLocalStore.storeUserData(UserName,UserPhone,UserAddress,UserId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
 
         }
     }
@@ -188,14 +246,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_menu) {
-            // Handle the camera action
+            fragmentManager.beginTransaction().replace(R.id.content_Frame, new CategoriesFragmenent2()).addToBackStack(null).commit();
         } else if (id == R.id.nav_cart) {
+            fragmentManager.beginTransaction().replace(R.id.content_Frame, new CartFragment()).addToBackStack(null).commit();
 
         } else if (id == R.id.contact_us) {
 
         } else if (id == R.id.nav_call) {
+            fragmentManager.beginTransaction().replace(R.id.content_Frame, new CallFragment()).addToBackStack(null).commit();
 
         } else if (id == R.id.nav_User) {
+
 
         } else if (id == R.id.nav_Logout) {
 

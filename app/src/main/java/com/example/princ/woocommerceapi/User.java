@@ -9,13 +9,13 @@ import java.net.URL;
 
 public class User {
     String name, username, password;
-    int age,id;
+    int id;
 
     public User(String name,int age, String username , String password  ){
         this.name = name;
         this.username = username;
         this.password = password;
-        this.age = age;
+
     }
 
     public User(String username, String password) {
@@ -35,7 +35,5 @@ public class User {
         return username;
     }
 
-    public int getAge() {
-        return age;
-    }
+
 }

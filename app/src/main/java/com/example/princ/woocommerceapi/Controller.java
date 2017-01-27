@@ -12,6 +12,11 @@ import java.util.Objects;
 
 public class Controller extends Application {
 
+
+
+
+    private boolean allProductsAdded;
+
     private ArrayList<ModelProducts> AllProducts = new ArrayList<ModelProducts>();
     private ArrayList<ModelProducts> noodleProducts = new ArrayList<ModelProducts>();
     private ArrayList<ModelProducts> AppetizerProductAl = new ArrayList<ModelProducts>();
@@ -25,6 +30,14 @@ public class Controller extends Application {
     public ModelProducts getNoodleP(int pPosition) {
 
         return noodleProducts.get(pPosition);
+    }
+
+    public void setAllProductsAdded(boolean allProductsAdded) {
+        this.allProductsAdded = allProductsAdded;
+    }
+
+    public boolean isAllProductsAdded() {
+        return allProductsAdded;
     }
 
     public void addAppetizertoAl(List<ModelProducts> productList){
