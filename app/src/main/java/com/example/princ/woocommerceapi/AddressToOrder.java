@@ -2,6 +2,7 @@ package com.example.princ.woocommerceapi;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -107,7 +108,6 @@ public class AddressToOrder extends Fragment {
         try {
             jObjectShipingLines.put("method_id","flat_rate");
             jObjectShipingLines.put("method_title","Flat Rate");
-            jObjectShipingLines.put("total", 10);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -193,6 +193,7 @@ public class AddressToOrder extends Fragment {
                         sb.append(line + "\n");     //Reading and saving line by line - not all at once
                     }
                     line = sb.toString();
+                    controller.setOrderPlacedResponseJson(line);
                     Log.i("orderMEssage",line);
 
                 }
@@ -257,8 +258,8 @@ public class AddressToOrder extends Fragment {
         protected void onPostExecute(Void aVoid) {
             //progressDialog.dismiss();
             if (responseCode >= 200 && responseCode < 400) {
-                Intent intent = new Intent(getActivity().getBaseContext(),MainActivity.class);
-                startActivity(intent);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_Frame, new OrderPlacedFragment()).addToBackStack(null).commit();
             }
             else {
                 new AlertDialog.Builder(getActivity().getBaseContext())

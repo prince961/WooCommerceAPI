@@ -24,6 +24,15 @@ public class Controller extends Application {
     private ArrayList<ModelProducts> VegMainCourse = new ArrayList<ModelProducts>();
     private ArrayList<ModelProducts> NonVegMainAl = new ArrayList<ModelProducts>();
 
+    public String getOrderPlacedResponseJson() {
+        return OrderPlacedResponseJson;
+    }
+
+    public void setOrderPlacedResponseJson(String orderPlacedResponseJson) {
+        OrderPlacedResponseJson = orderPlacedResponseJson;
+    }
+
+    private String OrderPlacedResponseJson = null;
     private  ModelCart myCart = new ModelCart();
 
 

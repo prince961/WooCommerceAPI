@@ -3,15 +3,33 @@ package com.example.princ.woocommerceapi;
 import android.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
+import org.joda.time.format.ISODateTimeFormat;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
 
 /**
  * Created by princ on 25-11-2016.
@@ -21,39 +39,85 @@ public class OrderPlacedFragment extends Fragment {
 
     Controller controller = null;
     View myView;
+    TextView thankyouName,orderId,OrderDAteTime,OrderAddress,totalAmount;
+    String name,date,address,amountTotal;
+    Date formattedDate;
+    int Orderid;
+
+    private  ArrayList<ModelProducts> productsOrdered = new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        myView = inflater.inflate(R.layout.activity_noodle,container,false);
+        myView = inflater.inflate(R.layout.order_placed,container,false);
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
 
-
-        ListView listView = (ListView) myView.findViewById(R.id.LvNoodle);
-        ImageView categoryImage = (ImageView) myView.findViewById(R.id.IvNoodleCat);
-        Drawable catImage = getResources().getDrawable(R.drawable.nonvegmain);
-        categoryImage.setImageDrawable(catImage);
+        thankyouName = (TextView) myView.findViewById(R.id.thanks);
+        orderId = (TextView) myView.findViewById(R.id.orderId);
+        OrderDAteTime = (TextView) myView.findViewById(R.id.OrderDAteTime);
+        OrderAddress = (TextView) myView.findViewById(R.id.OrderAddress);
+        totalAmount = (TextView) myView.findViewById(R.id.totalAmountOP);
+        ListView listView = (ListView) myView.findViewById(R.id.listViewOrderItems);
         controller = (Controller) getActivity().getApplicationContext();
+        String jsonResponse = controller.getOrderPlacedResponseJson();
+        try {
+            JSONObject jsonObject = new JSONObject(jsonResponse);
+            JSONObject order = jsonObject.getJSONObject("order");
+            Orderid = order.getInt("id");
+            amountTotal = order.getString("total");
+            JSONArray lineItems = order.getJSONArray("line_items");
+            int lineItemSize = lineItems.length();
+            for (int i = 0; i < lineItemSize; i++){
+                JSONObject jsonObject1 = lineItems.getJSONObject(i);
+                int Productid = jsonObject1.getInt("product_id");
+                int productQty = jsonObject1.getInt("quantity");
+                String productName = jsonObject1.getString("name");
+                int price = jsonObject1.getInt("price");
+                ModelProducts modelProducts = new ModelProducts(productName,null,price,productQty,Productid,null,null);
+                productsOrdered.add(modelProducts);
+            }
 
-        boolean productInCart = controller.checkNonVegMainCourseId(401);
-        if (productInCart==false) {
+            JSONObject customer = order.getJSONObject("customer");
+            date = order.getString("created_at");
+            JSONObject billingAddress = customer.getJSONObject("billing_address");
+            name = billingAddress.getString("first_name");
+            String address1 = billingAddress.getString("address_1");
+            String address2 = billingAddress.getString("address_2");
+            String city = billingAddress.getString("city");
+            String state = billingAddress.getString("state");
+            if (address2 == null){
+                address = address1 + ", " +city+", "+state;
+            }else {
+                address = address1 + ", "+address2+", " +city+", "+state;
+            }
 
-
-
-
-            return myView;
-        }else {
-            ArrayList<ModelProducts> categoryList = controller.getNonVegMainAl();
-            ListAdapterImagLess listAdapterImagLess = new ListAdapterImagLess(getActivity().getBaseContext(), R.layout.list_item_imageless, categoryList, controller);
-            listView.setAdapter(listAdapterImagLess);
-            return myView;
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+        thankyouName.setText(String.format("Thank You %s", name));
+        orderId.setText(String.format("Order id: %s", Orderid));
+
+        DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(date);
+        LocalTime time = dateTime.toLocalTime();
+
+
+        OrderDAteTime.setText("Time: " +dateTime.toString("HH:mm"));
+        totalAmount.setText(amountTotal);
+        OrderAddress.setText("Address: "+address);
+
+        ListAdapterOP hvhvhjvh = new ListAdapterOP(getActivity().getBaseContext(),R.layout.order_placed_list_item,productsOrdered,controller);
+        listView.setAdapter(hvhvhjvh);
+        //Log.i("orderProduct",productsOrdered.get(1).getProductName());
+
+
+        return myView;
     }
 
 
 
-  //n ftxg = fragmentManager.beginTransaction().replace( R.id.fragment, new MyFragment() ).addToBackStack( "tag" ).commit();
+
 
 
 
