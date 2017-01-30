@@ -41,8 +41,8 @@ public class CartFragment extends Fragment {
         final CartListAdapter cartListAdapter = new CartListAdapter(getActivity().getBaseContext(),R.layout.cart_item,cartProductList,controller,totalPrice);
         cListView.setAdapter(cartListAdapter);
         inflateTotalAmount(cartProductList);
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.INVISIBLE);
+        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        //fab.setVisibility(View.INVISIBLE);
         proceedFromCart.setOnClickListener(new View.OnClickListener()
         {
             @Override

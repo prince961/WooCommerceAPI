@@ -50,8 +50,8 @@ public class OrderPlacedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myView = inflater.inflate(R.layout.order_placed,container,false);
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
+        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        //fab.setVisibility(View.VISIBLE);
 
         thankyouName = (TextView) myView.findViewById(R.id.thanks);
         orderId = (TextView) myView.findViewById(R.id.orderId);
@@ -112,7 +112,9 @@ public class OrderPlacedFragment extends Fragment {
         //Log.i("orderProduct",productsOrdered.get(1).getProductName());
 
 
+        controller.deleteOrderPlacedJSon();
         return myView;
+
     }
 
 

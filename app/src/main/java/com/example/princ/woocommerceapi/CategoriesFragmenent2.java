@@ -31,8 +31,8 @@ public class CategoriesFragmenent2 extends Fragment {
         Controller controller = (Controller) getActivity().getApplicationContext();
         Boolean allProductsAdded = controller.isAllProductsAdded();
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
+        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        //fab.setVisibility(View.VISIBLE);
 
         //FragmentManager fragmentManager = getFragmentManager();
 

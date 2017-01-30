@@ -14,10 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -175,6 +177,8 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             //progressDialog.dismiss();
             if (responseCode >= 200 && responseCode < 400) {
+                DownloadUserDetails downloadUserDetails = new DownloadUserDetails();
+                downloadUserDetails.execute();
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(intent);
             }
@@ -190,6 +194,58 @@ public class LoginActivity extends AppCompatActivity {
             }
             //userCallback.done(null);
             super.onPostExecute(aVoid);
+        }
+    }
+    private class DownloadUserDetails extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            InputStream inputStream2 = null;
+            String data2 = null;
+            String userEmail = userLocalStore.getUserEmail();
+            String userUrl = "https://www.jersershor.com/wc-api/v3/customers/email/"+userEmail+"?consumer_key=ck_638caaf46271a320075ecee01e89581f91644b98&consumer_secret=cs_0f5fe1845a21396a459fc3961a8255d15a62970b";
+            try {
+                URL url = new URL(userUrl);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+                inputStream2 = urlConnection.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream2));
+                StringBuffer sb2 = new StringBuffer();
+
+                String line = "";
+                while ((line = br.readLine()) != null) {
+                    sb2.append(line);
+                }
+                data2 = sb2.toString();
+                br.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if ( inputStream2 != null){
+                        inputStream2.close();}
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                JSONObject jsonObject = new JSONObject(data2);
+                JSONObject jsonObjectUser = jsonObject.getJSONObject("customer");
+                String UserName = jsonObjectUser.getString("first_name");
+                int UserId = jsonObjectUser.getInt("id");
+                JSONObject shippingAddressJobject = jsonObjectUser.getJSONObject("billing_address");
+                String UserPhone = shippingAddressJobject.getString("phone");
+                String UserAddress = shippingAddressJobject.getString("address_1");
+
+                userLocalStore.storeUserData(UserName,UserPhone,UserAddress,UserId);
+                Log.i("userdatastoredName",userLocalStore.getUserName());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+
         }
     }
 }

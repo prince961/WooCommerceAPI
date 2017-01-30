@@ -73,6 +73,7 @@ public class AddressToOrder extends Fragment {
                 PlaceOrder placeOrder = new PlaceOrder();
                 placeOrder.execute();
 
+
             }
         });
         return myView;
@@ -259,7 +260,7 @@ public class AddressToOrder extends Fragment {
             //progressDialog.dismiss();
             if (responseCode >= 200 && responseCode < 400) {
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_Frame, new OrderPlacedFragment()).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_Frame, new OrderPlacedFragment()).commit();
             }
             else {
                 new AlertDialog.Builder(getActivity().getBaseContext())

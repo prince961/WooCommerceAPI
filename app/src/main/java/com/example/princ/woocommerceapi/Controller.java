@@ -17,6 +17,8 @@ public class Controller extends Application {
 
     private boolean allProductsAdded;
 
+
+
     private ArrayList<ModelProducts> AllProducts = new ArrayList<ModelProducts>();
     private ArrayList<ModelProducts> noodleProducts = new ArrayList<ModelProducts>();
     private ArrayList<ModelProducts> AppetizerProductAl = new ArrayList<ModelProducts>();
@@ -30,6 +32,10 @@ public class Controller extends Application {
 
     public void setOrderPlacedResponseJson(String orderPlacedResponseJson) {
         OrderPlacedResponseJson = orderPlacedResponseJson;
+    }
+
+    public void deleteOrderPlacedJSon(){
+        OrderPlacedResponseJson = null;
     }
 
     private String OrderPlacedResponseJson = null;
@@ -91,14 +97,17 @@ public class Controller extends Application {
     }
 
     public ArrayList<ModelProducts> getCategoryProducts(String category) {
+        ArrayList<ModelProducts> categoryProducts = new ArrayList<>();
         for (int j = 0; j < AllProducts.size(); j++) {
             String[] categories = AllProducts.get(j).getCategories();
             int categoryStringSize = categories.length;
 
+
             for (int k = 0 ; k< categoryStringSize ; k++ ){
                 String StringCAtegory = categories[k];
                 if (Objects.equals(StringCAtegory, category)){
-                    noodleProducts.add(AllProducts.get(j));
+
+                    categoryProducts.add(AllProducts.get(j));
 
                 }
 
@@ -106,7 +115,7 @@ public class Controller extends Application {
 
         }
 
-        return noodleProducts;
+        return categoryProducts;
     }
 
     public boolean checkAppetizerId(int id) {
@@ -120,6 +129,10 @@ public class Controller extends Application {
         }
 
         return isTrue;
+    }
+
+    public ArrayList<ModelProducts> getAllProducts() {
+        return AllProducts;
     }
 
     public ArrayList<ModelProducts> getNonVegMainAl() {

@@ -26,8 +26,8 @@ public class NonVegMainCourseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myView = inflater.inflate(R.layout.activity_noodle,container,false);
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
+        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        //fab.setVisibility(View.VISIBLE);
 
 
         ListView listView = (ListView) myView.findViewById(R.id.LvNoodle);

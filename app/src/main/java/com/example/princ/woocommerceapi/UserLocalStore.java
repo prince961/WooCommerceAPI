@@ -93,7 +93,7 @@ public class UserLocalStore {
     public void ClearUserData(){
         SharedPreferences.Editor spEditor = userLocalDatabase.edit();
         spEditor.clear();
-        spEditor.commit();
+        spEditor.apply();
     }
 
 

@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -42,38 +43,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        fragmentManager.beginTransaction().replace(R.id.content_Frame, new CategoriesFragmenent2()).commit();
-
-        controller = (Controller) getApplicationContext();
-
-        if (!controller.isAllProductsAdded()){
-        DownloadProducts downloadProducts = new DownloadProducts();
-        downloadProducts.execute();}
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                  //      .setAction("Action", null).show();
-                fragmentManager.beginTransaction().replace(R.id.content_Frame, new CartFragment()).addToBackStack(null).commit();
-
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         userLocalStore = new UserLocalStore(this);
     }
 
@@ -130,8 +99,8 @@ public class MainActivity extends AppCompatActivity
             controller.addAllProducts(AllProducts);
             controller.setAllProductsAdded(true);
             Log.i("main_act_allproducts",Boolean.toString(controller.isAllProductsAdded()));
-            DownloadUserDetails downloadUserDetails = new DownloadUserDetails();
-            downloadUserDetails.execute();
+            //DownloadUserDetails downloadUserDetails = new DownloadUserDetails();
+            //downloadUserDetails.execute();
 
         }
     }
@@ -180,6 +149,7 @@ public class MainActivity extends AppCompatActivity
                 String UserAddress = shippingAddressJobject.getString("address_1");
 
                 userLocalStore.storeUserData(UserName,UserPhone,UserAddress,UserId);
+                Log.i("userdatastoredName",userLocalStore.getUserName());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -203,7 +173,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
+
         return true;
     }
 
@@ -211,13 +182,57 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         if (checkUserLocalStore()){
-            //Toast.makeText(this, "User Local Store have saved the user", Toast.LENGTH_SHORT).show();
+            setContentView(R.layout.activity_main);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            ImageView cartLogo = (ImageView) toolbar.findViewById(R.id.cartOnToolbar);
+            fragmentManager.beginTransaction().replace(R.id.content_Frame, new CategoriesFragmenent2()).commit();
+            cartLogo.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    //FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_Frame, new CartFragment()).addToBackStack(null).commit();
+                }
+            });
+
+            controller = (Controller) getApplicationContext();
+
+            if (!controller.isAllProductsAdded()){
+                DownloadProducts downloadProducts = new DownloadProducts();
+                downloadProducts.execute();}
+
+/*
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    //      .setAction("Action", null).show();
+                    fragmentManager.beginTransaction().replace(R.id.content_Frame, new CartFragment()).addToBackStack(null).commit();
+
+                }
+            });
+*/
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+
+
 
         }else {
             Intent intent = new Intent(MainActivity.this,LoginActivity.class);
             startActivity(intent);
             //Toast.makeText(getApplication(), Boolean.toString(userLocalStore.getUserLoggedIn()), Toast.LENGTH_LONG).show();
         }
+
+
     }
 
     private boolean checkUserLocalStore (){
@@ -259,6 +274,10 @@ public class MainActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_Logout) {
+            userLocalStore.SetUserLoggedIn(false);
+            userLocalStore.ClearUserData();
+            Intent intent = new Intent(getBaseContext(),LoginActivity.class);
+            startActivity(intent);
 
         }
 

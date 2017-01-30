@@ -27,8 +27,8 @@ public class StarterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myView = inflater.inflate(R.layout.activity_noodle,container,false);
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
+        //FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        //fab.setVisibility(View.VISIBLE);
 
         ImageView categoryImage = (ImageView) myView.findViewById(R.id.IvNoodleCat);
         Drawable catImage = getResources().getDrawable(R.drawable.appetizers);
