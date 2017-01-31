@@ -39,6 +39,7 @@ public class Register extends AppCompatActivity {
     EditText etname, etPhone, etpassword, etAddress, etEmail;
     Button bRegister;
     ProgressDialog progressDialog;
+    String UserPhone, userPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,14 +68,15 @@ public class Register extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setTitle("Processing");
         progressDialog.setMessage("please wait...");
+        progressDialog.show();
 
-        String UserPhone  =  etPhone.getText().toString();
+        UserPhone  =  etPhone.getText().toString();
         String UserEmail = etEmail.getText().toString();
         String UserName = etname.getText().toString();
         String UserAddress = etAddress.getText().toString();
-        String UserPassword = etpassword.getText().toString();
+        userPassword = etpassword.getText().toString();
 
-        Boolean AllfieldsCorrectlyFilled = checkTheFields(UserName,UserAddress,UserEmail,UserPhone,UserPassword);
+        Boolean AllfieldsCorrectlyFilled = checkTheFields(UserName,UserAddress,UserEmail,UserPhone,userPassword);
 
         if (AllfieldsCorrectlyFilled){
 
@@ -83,7 +85,7 @@ public class Register extends AppCompatActivity {
                 "  \"first_name\": \""+ UserName +"\",\n" +
                 "  \"last_name\": \"\",\n" +
                 "  \"username\": \""+ UserPhone +"\",\n" +
-                "  \"password\":\""+ UserPassword +"\",\n" +
+                "  \"password\":\""+ userPassword +"\",\n" +
                 "  \"billing_address\": {\n" +
                 "    \"first_name\": \""+ UserName +"\",\n" +
                 "    \"last_name\": \"\",\n" +
@@ -174,9 +176,12 @@ public class Register extends AppCompatActivity {
                     }
                     line = sb.toString();           //Saving complete data received in string, you can do it differently
 
+                    UserLocalStore userLocalStore = new UserLocalStore(getBaseContext());
+                    userLocalStore.storeUserNumberPassword(UserPhone,userPassword);
+
                     //Just check to the values received in Logcat
                     Log.i("custom_check", "The values received in the store part are as follows:");
-                    Log.i("custom_check", line);
+                    Log.i("custom_checkPassword", userLocalStore.getUserPassword());
                     Log.i("custom_check", Integer.toString(responseCode));
                 }
                 else {
@@ -234,7 +239,9 @@ public class Register extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             progressDialog.dismiss();
             if (responseCode >= 200 && responseCode < 400) {
-                //do nothing
+                Intent intent = new Intent(Register.this,LoginActivity.class);
+                startActivity(intent);
+
             }
             else {
                 if (Objects.equals(errorCodeString, "registration-error-username-exists")){

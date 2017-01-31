@@ -34,16 +34,27 @@ public class LoginActivity extends AppCompatActivity {
     TextView tvRegister;
     String body;
     UserLocalStore userLocalStore;
-
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        progressDialog = new ProgressDialog(LoginActivity.this);
 
         etUsername = (EditText) findViewById(R.id.etphone);
         etPassword = (EditText) findViewById(R.id.etPasswordLogin);
         userLocalStore = new UserLocalStore(getBaseContext());
+        String password =  userLocalStore.getUserPassword();
+        //Log.i("password",password);
+        if (password == null){}
+        else {
+            Log.i("password",password);
+            etUsername.setText(userLocalStore.getUserNumber());
+            etPassword.setText(password);
+        }
+
+
 
     }
 
@@ -71,6 +82,17 @@ public class LoginActivity extends AppCompatActivity {
         String errorMessage;
         String errorCodeString;
         String userEmail;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.setCancelable(false);
+            progressDialog.setTitle("Processing");
+            progressDialog.setMessage("please wait...");
+            progressDialog.show();
+
+
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -246,6 +268,12 @@ public class LoginActivity extends AppCompatActivity {
             }
             return null;
 
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            progressDialog.hide();
         }
     }
 }

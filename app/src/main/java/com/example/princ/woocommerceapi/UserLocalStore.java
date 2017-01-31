@@ -96,6 +96,16 @@ public class UserLocalStore {
         spEditor.apply();
     }
 
+    public void storeUserNumberPassword(String number, String password){
+       SharedPreferences.Editor spEditor = userLocalDatabase.edit();
+       spEditor.putString("phone",number);
+       spEditor.putString("password",password);
+        spEditor.apply();
+    }
+
+    public String getUserPassword(){
+        return userLocalDatabase.getString("password",null);
+    }
 
     public int getUserId() {
         return userLocalDatabase.getInt("id",0);

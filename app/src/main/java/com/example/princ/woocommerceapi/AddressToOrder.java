@@ -3,6 +3,7 @@ package com.example.princ.woocommerceapi;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -42,6 +43,7 @@ public class AddressToOrder extends Fragment {
     JSONArray lineItemArray;
     int responseCode;
     String errorMessage;
+    ProgressDialog progressDialog;
 
     View myView;
     @Nullable
@@ -256,6 +258,16 @@ public class AddressToOrder extends Fragment {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setCancelable(false);
+            progressDialog.setTitle("Processing");
+            progressDialog.setMessage("please wait...");
+            progressDialog.show();
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
             //progressDialog.dismiss();
             if (responseCode >= 200 && responseCode < 400) {
@@ -280,6 +292,7 @@ public class AddressToOrder extends Fragment {
                         .show();
 
             }
+            progressDialog.hide();
             //userCallback.done(null);
             super.onPostExecute(aVoid);
         }
