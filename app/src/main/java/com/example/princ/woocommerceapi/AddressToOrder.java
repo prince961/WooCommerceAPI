@@ -271,6 +271,7 @@ public class AddressToOrder extends Fragment {
         protected void onPostExecute(Void aVoid) {
             //progressDialog.dismiss();
             if (responseCode >= 200 && responseCode < 400) {
+                controller.resetAllProductsQty();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.content_Frame, new OrderPlacedFragment()).commit();
             }

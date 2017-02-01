@@ -72,6 +72,31 @@ public class Controller extends Application {
 
     }
 
+    public void resetAllProductsQty(){
+        ArrayList<ModelProducts> cartProducts = myCart.getCartProducts();
+
+        for (int j = 0; j < cartProducts.size(); j++) {
+          int id =  cartProducts.get(j).getId();
+            setProductQty0(id);
+        }
+
+        cartProducts.removeAll(cartProducts);
+
+    }
+
+    public void setProductQty0(int id) {
+
+
+        for (int j = 0; j < AllProducts.size(); j++) {
+            if (AllProducts.get(j).getId() == id) {
+                AllProducts.get(j).setProductQuantity(0);
+                break;
+            }
+        }
+
+
+    }
+
     public ModelCart getCart() {
 
         return myCart;
